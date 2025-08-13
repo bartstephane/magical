@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'HomePage.dart';
+import 'homepage.dart';
 
 class MagiCal extends StatelessWidget {
   const MagiCal({super.key});

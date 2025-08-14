@@ -1,28 +1,17 @@
 <?php
-// api.php — version minimale pour test
+header('Content-Type: application/json');
 
-// Autoriser le retour JSON
-header('Content-Type: application/json; charset=utf-8');
+$route = $_GET['route'] ?? '';
 
-// Récupérer la route (après /api/)
-$route = isset($_GET['route']) ? trim($_GET['route'], '/') : '';
-
-// Réponse selon la route
 switch ($route) {
     case 'users':
+        // Exemple : réponse fictive
         echo json_encode([
             'status' => 'success',
             'data' => [
                 ['id' => 1, 'name' => 'Alice'],
-                ['id' => 2, 'name' => 'Bob'],
+                ['id' => 2, 'name' => 'Bob']
             ]
-        ]);
-        break;
-
-    case 'ping':
-        echo json_encode([
-            'status' => 'success',
-            'message' => 'API OK'
         ]);
         break;
 
@@ -33,4 +22,5 @@ switch ($route) {
             'message' => 'Endpoint not found',
             'route' => $route
         ]);
+        break;
 }

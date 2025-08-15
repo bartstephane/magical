@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json');
-require 'db.php'; // ton fichier de connexion PDO
+require 'db.php'; // fichier de connexion PDO
 /** @var PDO $pdo */
 
 $route = $_GET['route'] ?? '';
@@ -26,8 +26,8 @@ try {
             }
             elseif ($method === 'POST') {
                 $input = json_decode(file_get_contents('php://input'), true);
-                $stmt = $pdo->prepare("INSERT INTO users (name, email) VALUES (:name, :email)");
-                $stmt->execute(['name' => $input['name'], 'email' => $input['email']]);
+                $stmt = $pdo->prepare("INSERT INTO users (username, email, password_hash, color, created_by, created_date) VALUES (:name, :email)");
+                $stmt->execute(['name' => $input['username'], 'email' => $input['email'], 'password_hash' => $input['password_hash'], 'color' => $input['color'], 'created_by' => $input['created_by'], 'created_date' => $input['created_date']]);
                 jsonResponse('success', ['id' => $pdo->lastInsertId()]);
             }
             elseif ($method === 'DELETE') {
@@ -48,8 +48,8 @@ try {
             }
             elseif ($method === 'POST') {
                 $input = json_decode(file_get_contents('php://input'), true);
-                $stmt = $pdo->prepare("INSERT INTO events (title, date, end_date, time, end_time, created_by) 
-                                      VALUES (:title, :date, :end_date, :time, :end_time, :created_by)");
+                $stmt = $pdo->prepare("INSERT INTO events (group_id, title, date, end_date, time, end_time, created_by, created_date) 
+                                      VALUES (:group_id, :title, :date, :end_date, :time, :end_time, :created_by, :created_date)");
                 $stmt->execute($input);
                 jsonResponse('success', ['id' => $pdo->lastInsertId()]);
             }

@@ -53,6 +53,12 @@ try {
                 $stmt->execute($input);
                 jsonResponse('success', ['id' => $pdo->lastInsertId()]);
             }
+            elseif ($method === 'PUT') {
+                $input = json_decode(file_get_contents("php://input"), true);
+                $stmt = $pdo->prepare("UPDATE events SET group_id=?, title=?, date=?, end_date=?, time=?, end_time=?, description=?, modified_by=?, modified_date=? WHERE id=?");
+                $stmt->execute([$input['group_id'], $input['title'], $input['date'], $input['end_date'], $input['time'], $input['end_time'], $input['description'], $input['modified_by'], $input['modified_date'], $input['id']]);
+                echo json_encode(['status' => 'ok']);
+            }
             elseif ($method === 'DELETE') {
                 $id = $_GET['id'] ?? null;
                 $archived_by = $_GET['archived_by'] ?? null;

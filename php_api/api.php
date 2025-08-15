@@ -28,7 +28,7 @@ try {
                 $input = json_decode(file_get_contents('php://input'), true);
                 $stmt = $pdo->prepare("INSERT INTO users (name, email) VALUES (:name, :email)");
                 $stmt->execute(['name' => $input['name'], 'email' => $input['email']]);
-                jsonResponse('success', ['id' => $db->lastInsertId()]);
+                jsonResponse('success', ['id' => $pdo->lastInsertId()]);
             }
             elseif ($method === 'DELETE') {
                 $id = $_GET['id'] ?? null;
@@ -51,7 +51,7 @@ try {
                 $stmt = $pdo->prepare("INSERT INTO events (title, date, end_date, time, end_time, created_by) 
                                       VALUES (:title, :date, :end_date, :time, :end_time, :created_by)");
                 $stmt->execute($input);
-                jsonResponse('success', ['id' => $db->lastInsertId()]);
+                jsonResponse('success', ['id' => $pdo->lastInsertId()]);
             }
             elseif ($method === 'DELETE') {
                 $id = $_GET['id'] ?? null;

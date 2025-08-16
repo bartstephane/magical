@@ -1,3 +1,4 @@
+import 'package:calendar_view/calendar_view.dart';
 import 'package:flutter/material.dart';
 
 import 'homepage.dart';
@@ -8,7 +9,9 @@ class MagiCal extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return CalendarControllerProvider(
+        controller: EventController(),
+        child: MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
         // This is the theme of your application.
@@ -29,6 +32,6 @@ class MagiCal extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       home: const HomePage(title: 'Flutter Demo Home Page'),
-    );
+    ));
   }
 }

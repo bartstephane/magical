@@ -21,23 +21,130 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-  void _addEvent() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      final event = CalendarEventData(
-        title: 'Test',
-        date: DateTime(2025, 8, 16),
-        endDate: DateTime(2025,8,16),
-        startTime: DateTime(2025, 8, 16, 14, 0),
-        endTime: DateTime(2025, 8, 16, 15, 0),
-      );
+  final EventController _eventController = EventController();
 
-      CalendarControllerProvider.of(context).controller.add(event);
-    });
+  @override
+  void dispose() {
+    _eventController.dispose();
+    super.dispose();
+  }
+
+  void _openAddEventModal() {
+    final titleController = TextEditingController();
+    DateTime? start;
+    DateTime? end;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true, // pour que le clavier pousse bien la sheet
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+            left: 16,
+            right: 16,
+            top: 16,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: titleController,
+                decoration: InputDecoration(labelText: "Titre"),
+              ),
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      child: Text(start == null
+                          ? "Choisir début"
+                          : start.toString()),
+                      onPressed: () async {
+                        final date = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2100),
+                        );
+                        if (date != null) {
+                          final time = await showTimePicker(
+                            context: context,
+                            initialTime: TimeOfDay.now(),
+                          );
+                          if (time != null) {
+                            setState(() {
+                              start = DateTime(
+                                date.year,
+                                date.month,
+                                date.day,
+                                time.hour,
+                                time.minute,
+                              );
+                            });
+                          }
+                        }
+                      },
+                    ),
+                  ),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: ElevatedButton(
+                      child:
+                      Text(end == null ? "Choisir fin" : end.toString()),
+                      onPressed: () async {
+                        final date = await showDatePicker(
+                          context: context,
+                          initialDate: start ?? DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2100),
+                        );
+                        if (date != null) {
+                          final time = await showTimePicker(
+                            context: context,
+                            initialTime: TimeOfDay.now(),
+                          );
+                          if (time != null) {
+                            setState(() {
+                              end = DateTime(
+                                date.year,
+                                date.month,
+                                date.day,
+                                time.hour,
+                                time.minute,
+                              );
+                            });
+                          }
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                child: Text("Ajouter l'événement"),
+                onPressed: () {
+                  if (titleController.text.isNotEmpty && start != null && end != null) {
+                    _eventController.add(CalendarEventData(
+                      title: titleController.text,
+                      date: start!,
+                      startTime: start!,
+                      endTime: end!,
+                    ));
+                    Navigator.pop(context);
+                  }
+                },
+              ),
+              SizedBox(height: 20),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -60,11 +167,11 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Center(
         child: DayView(
-
+          controller: _eventController,
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _addEvent,
+        onPressed: _openAddEventModal,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.

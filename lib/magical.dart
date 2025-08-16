@@ -16,7 +16,7 @@ class MagiCal extends StatelessWidget {
     return CalendarControllerProvider(
       controller: EventController(),
       child: MaterialApp(
-        title: 'Flutter Demo',
+        title: 'MagiCal',
         theme: ThemeData(
           // This is the theme of your application.
           //
@@ -42,7 +42,7 @@ class MagiCal extends StatelessWidget {
             PointerDeviceKind.touch,
           },
         ),
-        home: const HomePage(title: 'Flutter Demo Home Page'),
+        home: const HomePage(title: 'MagiCal'),
       ),
     );
   }

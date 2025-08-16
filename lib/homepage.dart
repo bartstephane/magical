@@ -20,16 +20,23 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _counter = 0;
 
-  void _incrementCounter() {
+  void _addEvent() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
       // changed in this State, which causes it to rerun the build method below
       // so that the display can reflect the updated values. If we changed
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
-      _counter++;
+      final event = CalendarEventData(
+        title: 'Test',
+        date: DateTime(2025, 8, 16),
+        endDate: DateTime(2025,8,16),
+        startTime: DateTime(2025, 8, 16, 14, 0),
+        endTime: DateTime(2025, 8, 16, 15, 0),
+      );
+
+      CalendarControllerProvider.of(context).controller.add(event);
     });
   }
 
@@ -57,7 +64,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: _addEvent,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.

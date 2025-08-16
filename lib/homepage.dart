@@ -1,6 +1,33 @@
+import 'dart:convert';
+
 import 'package:calendar_view/calendar_view.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+
+const String apiUrl = "https://magical.stefbart.ch/api.php";
+
+Future<void> saveEventToApi(String title, DateTime start, DateTime end) async {
+  final response = await http.post(
+    Uri.parse("$apiUrl?action=create_event"),
+    headers: {"Content-Type": "application/json"},
+    body: jsonEncode({
+      "title": title,
+      "start": start.toIso8601String(),
+      "end": end.toIso8601String(),
+    }),
+  );
+
+  if (response.statusCode == 200) {
+    final data = jsonDecode(response.body);
+    if (data["success"] == true) {
+      print("Événement enregistré en DB avec ID ${data['id']}");
+    } else {
+      print("Erreur côté API: ${data['error']}");
+    }
+  } else {
+    print("Erreur réseau: ${response.statusCode}");
+  }
+}
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.title});

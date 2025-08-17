@@ -5,6 +5,7 @@ require 'db.php'; // fichier de connexion PDO
 
 $route = $_GET['route'] ?? '';
 $method = $_SERVER['REQUEST_METHOD'];
+$currentUserId = $_GET['user_id'] ?? null;
 
 function jsonResponse($status, $data = null, $message = '') {
     echo json_encode([

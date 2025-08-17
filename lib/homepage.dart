@@ -30,7 +30,8 @@ Future<void> saveEventToApi(String title, DateTime start, DateTime end) async {
 }
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key, required this.title});
+  final String token;
+  const HomePage({super.key, required this.title, required this.token});
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect

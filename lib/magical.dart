@@ -2,6 +2,8 @@ import 'dart:ui';
 
 import 'package:calendar_view/calendar_view.dart';
 import 'package:flutter/material.dart';
+import 'package:magical/signup_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'homepage.dart';
 
@@ -9,6 +11,11 @@ DateTime get _now => DateTime.now();
 
 class MagiCal extends StatelessWidget {
   const MagiCal({super.key});
+
+  Future<String?> _getStoredToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('token');
+  }
 
   // This widget is the root of your application.
   @override
@@ -42,7 +49,24 @@ class MagiCal extends StatelessWidget {
             PointerDeviceKind.touch,
           },
         ),
-        home: const HomePage(title: 'MagiCal'),
+        home: FutureBuilder<String?>(
+          future: _getStoredToken(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Scaffold(
+                body: Center(child: CircularProgressIndicator()),
+              );
+            }
+
+            if (snapshot.hasData && snapshot.data != null) {
+              // Un token est déjà présent → on va direct sur HomePage
+              return HomePage(title: 'MagiCal',token: snapshot.data!);
+            } else {
+              // Pas de token → l’utilisateur doit créer son compte
+              return const SignupPage();
+            }
+          },
+        ),
       ),
     );
   }
